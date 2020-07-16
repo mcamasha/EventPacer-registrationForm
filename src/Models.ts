@@ -13,3 +13,25 @@ export type TRegistrationRequestRequiredFields = Pick<
   IRegistrationRequest,
   "email" | "phone" | "name"
 >;
+
+export interface IRequestSendSMSCodeResponse {
+  result: string;
+  smsSessionParameters: ISMSSessionParameters;
+  traceId: string;
+}
+
+interface ISMSSessionParameters {
+  remainCheckCount: number;
+  codeExpiresAfterSec: number;
+  nextSendAfterSec: number;
+}
+
+export interface IRegistrationResponse {
+  newUserCreated: boolean;
+  tokens: ITokens;
+}
+
+interface ITokens {
+  accessToken: string;
+  refreshToken: string;
+}

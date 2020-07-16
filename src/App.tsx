@@ -1,4 +1,5 @@
 import * as React from "react";
+import { SnackbarProvider } from "notistack";
 import { Header } from "./Components/Header/Header";
 import { PageContent } from "./Components/PageContent/PageContent";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
@@ -12,13 +13,15 @@ export default function App() {
 
   return (
     <div className={`App ${classes.root}`}>
-      <Router>
-        <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <Header />
-          <PageContent />
-        </ThemeProvider>
-      </Router>
+      <SnackbarProvider>
+        <Router>
+          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <Header />
+            <PageContent />
+          </ThemeProvider>
+        </Router>
+      </SnackbarProvider>
     </div>
   );
 }

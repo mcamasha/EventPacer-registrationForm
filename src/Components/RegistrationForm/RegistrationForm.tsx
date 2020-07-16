@@ -23,6 +23,8 @@ import {
   TRegistrationRequestRequiredFields
 } from "../../Models";
 import { REGISTRATION_FORM_REQUIRED_FIELDS } from "../../Consts/RegistrationFormConsts";
+import { Actions, IActions } from "../../Actions/Actions";
+import { Services } from "../../Services/Services";
 
 type TProps = WithStyles<typeof styles>;
 
@@ -44,6 +46,8 @@ class RegistrationForm extends React.Component<TProps, IState> {
     isOpenSMSModal: false,
     validationErrors: []
   };
+
+  actions: IActions = new Actions(new Services());
 
   isErrorVisible = (
     fieldName: keyof TRegistrationRequestRequiredFields
@@ -107,6 +111,13 @@ class RegistrationForm extends React.Component<TProps, IState> {
     this.setState({ isOpenSMSModal: true });
   };
 
+  handleSendSMSCode = () => {
+    const phone = this.state.form.phone;
+    this.actions.sendRequestToGetSMSCode(phone).then(() => {
+      this.handleOpenSMSModal();
+    });
+  };
+
   handleNextButtonClick = (section: ERegistrationFormTab) => () => {
     switch (section) {
       case ERegistrationFormTab.WELCOME: {
@@ -123,7 +134,7 @@ class RegistrationForm extends React.Component<TProps, IState> {
         break;
       }
       case ERegistrationFormTab.CONTACTS: {
-        this.validateForm(["email", "phone"], this.handleOpenSMSModal);
+        this.validateForm(["email", "phone"], this.handleSendSMSCode);
         break;
       }
     }
