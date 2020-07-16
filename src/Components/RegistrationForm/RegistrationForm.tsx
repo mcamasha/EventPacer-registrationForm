@@ -9,7 +9,7 @@ import {
   Tab,
   Paper,
   Box,
-  Modal
+  Modal,
 } from "@material-ui/core";
 import { styles } from "./RegistrationFormStyle";
 import { TabPanel } from "./Components/TabPanel";
@@ -20,19 +20,23 @@ import { SMSModal } from "./Components/SMSModal";
 import { ERegistrationFormTab, EPhonePrefix } from "./Enums";
 import {
   IRegistrationRequest,
-  TRegistrationRequestRequiredFields
+  TRegistrationRequestRequiredFields,
+  IRequestSendSMSCodeResponse,
 } from "../../Models";
 import { REGISTRATION_FORM_REQUIRED_FIELDS } from "../../Consts/RegistrationFormConsts";
 import { Actions, IActions } from "../../Actions/Actions";
 import { Services } from "../../Services/Services";
+import { withSnackbar, ProviderContext } from "notistack";
+import { getPhoneForServer } from "./Utils/Utils";
 
-type TProps = WithStyles<typeof styles>;
+type TProps = WithStyles<typeof styles> & ProviderContext;
 
 interface IState {
   selectedTab: ERegistrationFormTab;
   form: IRegistrationRequest;
   isOpenSMSModal: boolean;
   validationErrors: string[];
+  remainingSecondsForSMS: number;
 }
 
 class RegistrationForm extends React.Component<TProps, IState> {
@@ -41,13 +45,14 @@ class RegistrationForm extends React.Component<TProps, IState> {
     form: {
       name: "",
       email: "",
-      phone: ""
+      phone: "",
     },
     isOpenSMSModal: false,
-    validationErrors: []
+    validationErrors: [],
+    remainingSecondsForSMS: 0,
   };
 
-  actions: IActions = new Actions(new Services());
+  actions: IActions = new Actions(new Services(), this.props.enqueueSnackbar);
 
   isErrorVisible = (
     fieldName: keyof TRegistrationRequestRequiredFields
@@ -73,7 +78,7 @@ class RegistrationForm extends React.Component<TProps, IState> {
         } else {
           if (newValidationErrors.includes(key)) {
             newValidationErrors = newValidationErrors.filter(
-              error => error !== key
+              (error) => error !== key
             );
           }
         }
@@ -98,8 +103,8 @@ class RegistrationForm extends React.Component<TProps, IState> {
   };
 
   handleChangeForm = (partial: Partial<IRegistrationRequest>) => {
-    this.setState(prevState => ({
-      form: { ...prevState.form, ...partial }
+    this.setState((prevState) => ({
+      form: { ...prevState.form, ...partial },
     }));
   };
 
@@ -113,9 +118,20 @@ class RegistrationForm extends React.Component<TProps, IState> {
 
   handleSendSMSCode = () => {
     const phone = this.state.form.phone;
-    this.actions.sendRequestToGetSMSCode(phone).then(() => {
-      this.handleOpenSMSModal();
-    });
+    const phoneForServer = getPhoneForServer(phone);
+
+    this.actions
+      .sendRequestToGetSMSCode(phoneForServer)
+      .then((data: IRequestSendSMSCodeResponse | undefined) => {
+        const remainingSeconds = data?.smsSessionParameters.nextSendAfterSec;
+
+        this.setState(
+          {
+            remainingSecondsForSMS: !!remainingSeconds ? remainingSeconds : 0,
+          },
+          this.handleOpenSMSModal
+        );
+      });
   };
 
   handleNextButtonClick = (section: ERegistrationFormTab) => () => {
@@ -141,7 +157,13 @@ class RegistrationForm extends React.Component<TProps, IState> {
   };
 
   render() {
-    const { selectedTab, form, isOpenSMSModal, validationErrors } = this.state;
+    const {
+      selectedTab,
+      form,
+      form: { phone },
+      isOpenSMSModal,
+      remainingSecondsForSMS,
+    } = this.state;
     const { classes } = this.props;
 
     return (
@@ -188,7 +210,6 @@ class RegistrationForm extends React.Component<TProps, IState> {
                 onChange={this.handleChangeForm}
                 classes={classes}
                 form={form}
-                validationErrors={validationErrors}
                 isErrorVisible={this.isErrorVisible}
               />
             </TabPanel>
@@ -203,20 +224,30 @@ class RegistrationForm extends React.Component<TProps, IState> {
                 onChange={this.handleChangeForm}
                 classes={classes}
                 form={form}
-                validationErrors={validationErrors}
                 isErrorVisible={this.isErrorVisible}
               />
             </TabPanel>
           </Paper>
         </Container>
-        <SMSModal isOpen={isOpenSMSModal} onClose={this.handleCloseSMSModal} />
+        {isOpenSMSModal && (
+          <SMSModal
+            classes={classes}
+            isOpen={isOpenSMSModal}
+            onClose={this.handleCloseSMSModal}
+            remainingSecondsForSMS={remainingSecondsForSMS}
+            phone={phone}
+            actions={this.actions}
+          />
+        )}
       </div>
     );
   }
 }
 
+const RegistrationFormWithSnackbar = withSnackbar(RegistrationForm);
+
 const RegistrationFormWithStyles = withStyles(styles, {
-  withTheme: true
-})(RegistrationForm);
+  withTheme: true,
+})(RegistrationFormWithSnackbar);
 
 export { RegistrationFormWithStyles as RegistrationForm };

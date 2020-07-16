@@ -6,61 +6,82 @@ export const styles = (theme: Theme) =>
       ...theme.typography.button,
       fontSize: theme.spacing(3),
       float: "left",
-      margin: theme.spacing(5, 0)
+      margin: theme.spacing(5, 0),
     },
     container: {
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column",
     },
     registrationForm: {
-      marginBottom: theme.spacing(4)
+      marginBottom: theme.spacing(4),
     },
     welcomeHeader: {
       float: "left",
-      margin: theme.spacing(4, 0)
+      margin: theme.spacing(4, 0),
     },
     welcomeText: {
       textAlign: "left",
-      width: "80%"
+      width: "80%",
     },
     welcomeBody: {
-      display: "flex"
+      display: "flex",
     },
     welcomeMainText: {
       textAlign: "left",
-      marginTop: theme.spacing(4)
+      marginTop: theme.spacing(4),
     },
     sectionFooter: {
       textAlign: "right",
-      marginTop: theme.spacing(4)
+      marginTop: theme.spacing(4),
     },
     generalInfoFieldsContainer: {
       display: "flex",
-      justifyContent: "space-around"
+      justifyContent: "space-around",
     },
     generalInfoLogoInput: {
-      display: "none"
+      display: "none",
     },
     generalInfoLogoInputContainer: {
-      float: "right"
+      float: "right",
     },
     formRow: {
       marginBottom: theme.spacing(3),
-      width: theme.spacing(38)
+      width: theme.spacing(38),
     },
     formColomn: {
       width: theme.spacing(38),
       marginRight: theme.spacing(8),
-      display: "inline-block"
+      display: "inline-block",
     },
     contactsPhone: {
       display: "flex",
-      flexDirection: "row"
+      flexDirection: "row",
     },
     contactsPhoneContainer: {
-      width: "100%"
+      width: "100%",
     },
     contactsPrefixSelect: {
-      marginRight: theme.spacing(3)
-    }
+      marginRight: theme.spacing(3),
+    },
+    SMSModal: {
+      position: "absolute",
+      width: theme.spacing(50),
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      backgroundColor: theme.palette.background.paper,
+      top: "40%",
+      left: "35%",
+    },
+    SMSModalBody: {
+      position: "relative",
+    },
+    SMSModalCloseIcon: {
+      position: "absolute",
+      right: "0",
+      cursor: "pointer",
+    },
+    SMSModalSendCodeButton: {
+      width: theme.spacing(15),
+    },
   });

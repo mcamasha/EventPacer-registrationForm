@@ -1,0 +1,15 @@
+{
+  "data": {
+    "result": "Ok",
+    "smsSessionParameters": {
+      "remainCheckCount": 4,
+      "codeExpiresAfterSec": 599,
+      "nextSendAfterSec": 1919
+    },
+    "traceId": "3c331e6a-3b59-4572-a648-cafa054b085e"
+  },
+  "status": 200,
+  "statusText": "",
+  "headers": {},
+  "config": {}
+}

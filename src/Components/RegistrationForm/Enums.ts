@@ -1,7 +1,7 @@
 export enum ERegistrationFormTab {
   WELCOME = "WELCOME",
   GENERAL_INFORMATION = "GENERAL_INFORMATION",
-  CONTACTS = "CONTACTS"
+  CONTACTS = "CONTACTS",
 }
 
 export enum EPhonePrefix {
@@ -212,5 +212,5 @@ export enum EPhonePrefix {
   "+681" = "+681",
   "+967" = "+967",
   "+260" = "+260",
-  "+263" = "+263"
+  "+263" = "+263",
 }

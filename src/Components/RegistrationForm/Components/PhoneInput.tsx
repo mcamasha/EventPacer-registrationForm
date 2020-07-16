@@ -7,7 +7,7 @@ import {
   MenuItem,
   TextField,
   FormHelperText,
-  Box
+  Box,
 } from "@material-ui/core";
 import { styles } from "../RegistrationFormStyle";
 import { EPhonePrefix } from "../Enums";
@@ -30,12 +30,12 @@ type TProps = IProps & WithStyles<typeof styles>;
 export class PhoneInput extends React.Component<TProps, IState> {
   state: IState = {
     prefix: EPhonePrefix["+7"],
-    phone: ""
+    phone: "",
   };
 
   options: string[] = Object.keys(EPhonePrefix);
 
-  handleChangePrefix = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleChangePrefix = (event: any) => {
     this.setState({ prefix: event.target.value as EPhonePrefix });
   };
 

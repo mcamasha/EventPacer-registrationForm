@@ -1,0 +1,9 @@
+{
+  "result": "WaitBeforeSend",
+  "smsSessionParameters": {
+    "remainCheckCount": 4,
+    "codeExpiresAfterSec": 594,
+    "nextSendAfterSec": 474
+  },
+  "traceId": "81bdba97-3056-4159-b995-01df8d5fa827"
+}

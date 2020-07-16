@@ -1,10 +1,10 @@
 export interface IRegistrationRequest {
-  email?: string;
-  phone?: string;
+  email: string;
+  phone: string;
   site?: string;
   facebook?: string;
   telegram?: string;
-  name?: string;
+  name: string;
   logo?: File;
   description?: string;
 }

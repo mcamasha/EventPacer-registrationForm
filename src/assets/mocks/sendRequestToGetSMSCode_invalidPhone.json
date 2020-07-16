@@ -1,0 +1,9 @@
+{
+  "result": "InvalidPhoneNumber",
+  "smsSessionParameters": {
+    "remainCheckCount": 4,
+    "codeExpiresAfterSec": 599,
+    "nextSendAfterSec": 0
+  },
+  "traceId": "c0cafd5e-ad3a-45f8-aaef-fdec6d22809e"
+}

@@ -5,13 +5,13 @@ import {
   WithStyles,
   Box,
   Button,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { styles } from "../RegistrationFormStyle";
 import {
   IRegistrationRequest,
-  TRegistrationRequestRequiredFields
+  TRegistrationRequestRequiredFields,
 } from "../../../Models";
 import { DropzoneArea } from "material-ui-dropzone";
 
@@ -20,7 +20,6 @@ interface IProps {
   onNextButtonClick: () => void;
   onChange: (partial: Partial<IRegistrationRequest>) => void;
   form: IRegistrationRequest;
-  validationErrors: string[];
   isErrorVisible: (
     fieldName: keyof TRegistrationRequestRequiredFields
   ) => boolean;
@@ -54,7 +53,7 @@ export class GeneralInformationSection extends React.Component<TProps> {
       classes,
       onNextButtonClick,
       form: { name, description, site },
-      isErrorVisible
+      isErrorVisible,
     } = this.props;
     const isNameErrorVisible = isErrorVisible("name") && !name;
 
