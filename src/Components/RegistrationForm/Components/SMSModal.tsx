@@ -19,6 +19,7 @@ import { getPhoneForServer } from "../Utils/Utils";
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenSuccessRegistrationModal: () => void;
   remainingSecondsForSMS: number;
   actions: IActions;
   phone: string;
@@ -78,19 +79,36 @@ export class SMSModal extends React.Component<TProps, IState> {
 
   setSendCodeInterval = () => {
     this.smsCodeTimerId = setInterval(() => {
-      this.setState({ remainingSeconds: --this.state.remainingSeconds });
+      let remainingSeconds = this.state.remainingSeconds;
+
+      if (!remainingSeconds) {
+        clearInterval(this.smsCodeTimerId);
+      }
+
+      this.setState({ remainingSeconds: --remainingSeconds });
     }, 1000);
   };
 
   handleSendSMSCode = (): void => {
-    const { actions, phone } = this.props;
+    const {
+      actions,
+      phone,
+      onOpenSuccessRegistrationModal,
+      onClose,
+    } = this.props;
     const { smsCode } = this.state;
     const phoneForServer = getPhoneForServer(phone);
 
     this.setState({ isLoaderSendCodeButtonVisible: true });
-    actions.registrationUser(phoneForServer, smsCode).finally(() => {
-      this.setState({ isLoaderSendCodeButtonVisible: false });
-    });
+    actions
+      .registrationUser(phoneForServer, smsCode)
+      .then(() => {
+        onOpenSuccessRegistrationModal();
+        onClose();
+      })
+      .finally(() => {
+        this.setState({ isLoaderSendCodeButtonVisible: false });
+      });
   };
 
   renderModalBody() {
@@ -130,7 +148,7 @@ export class SMSModal extends React.Component<TProps, IState> {
                 className={classes.SMSModalSendCodeButton}
               >
                 {isLoaderSendCodeButtonVisible ? (
-                  <CircularProgress size="2rem" />
+                  <CircularProgress size="1em" />
                 ) : (
                   "Отправить"
                 )}

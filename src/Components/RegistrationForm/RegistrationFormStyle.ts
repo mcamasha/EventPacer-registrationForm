@@ -44,6 +44,33 @@ export const styles = (theme: Theme) =>
     generalInfoLogoInputContainer: {
       float: "right",
     },
+    generalInfoPreviewLogoContainer: {
+      margin: "0",
+      justifyContent: "center",
+      position: "relative",
+      width: "200%",
+    },
+    generalInfoPreviewItemContainer: {
+      padding: "0!important",
+      position: "absolute",
+      top: theme.spacing(-14),
+      left: theme.spacing(9),
+    },
+    generalInfoDropZoneLogoIcon: {
+      color: "#757575",
+    },
+    generalInfoDropzoneText: {
+      fontSize: "1.2em",
+      color: "#757575",
+    },
+    generalInfoDropZoneLogo: {
+      borderWidth: "1px",
+      borderColor: "#757575",
+    },
+    generalInfoNextButton: {
+      width: theme.spacing(25),
+      height: theme.spacing(5),
+    },
     formRow: {
       marginBottom: theme.spacing(3),
       width: theme.spacing(38),
@@ -83,5 +110,22 @@ export const styles = (theme: Theme) =>
     },
     SMSModalSendCodeButton: {
       width: theme.spacing(15),
+      height: theme.spacing(5),
+    },
+    successRegistrationModal: {
+      position: "absolute",
+      width: theme.spacing(75),
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      backgroundColor: theme.palette.background.paper,
+      top: "30%",
+      left: "30%",
+    },
+    successRegistrationModalText: {
+      margin: theme.spacing(7, 0),
+    },
+    successRegistrationModalCloseButton: {
+      textAlign: "end",
     },
   });

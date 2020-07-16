@@ -2,6 +2,7 @@ import * as React from "react";
 import { SnackbarProvider } from "notistack";
 import { Header } from "./Components/Header/Header";
 import { PageContent } from "./Components/PageContent/PageContent";
+import { Menu } from "./Components/Menu/Menu";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import { theme } from "./Consts/Theme";
 import { getAppStyles } from "./Styles/Styles";
@@ -10,7 +11,7 @@ import { createBrowserHistory } from "history";
 
 import "./styles.css";
 
-export const history = createBrowserHistory();
+const history = createBrowserHistory();
 
 export default function App() {
   const classes = getAppStyles();
@@ -22,6 +23,7 @@ export default function App() {
           <CssBaseline />
           <ThemeProvider theme={theme}>
             <Header />
+            <Menu />
             <PageContent />
           </ThemeProvider>
         </Router>

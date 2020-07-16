@@ -1,5 +1,5 @@
 import * as React from "react";
-import { isEmpty, includes } from "lodash";
+import { isEmpty } from "lodash";
 import {
   Typography,
   withStyles,
@@ -9,15 +9,15 @@ import {
   Tab,
   Paper,
   Box,
-  Modal,
 } from "@material-ui/core";
 import { styles } from "./RegistrationFormStyle";
 import { TabPanel } from "./Components/TabPanel";
 import { WelcomeSection } from "./Components/WelcomeSection";
 import { GeneralInformationSection } from "./Components/GeneralInformationSection";
+import { SuccessRegistrationModal } from "./Components/SuccessRegistrationModal";
 import { ContactsSection } from "./Components/ContactsSection";
 import { SMSModal } from "./Components/SMSModal";
-import { ERegistrationFormTab, EPhonePrefix } from "./Enums";
+import { ERegistrationFormTab } from "./Enums";
 import {
   IRegistrationRequest,
   TRegistrationRequestRequiredFields,
@@ -28,8 +28,9 @@ import { Actions, IActions } from "../../Actions/Actions";
 import { Services } from "../../Services/Services";
 import { withSnackbar, ProviderContext } from "notistack";
 import { getPhoneForServer } from "./Utils/Utils";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-type TProps = WithStyles<typeof styles> & ProviderContext;
+type TProps = WithStyles<typeof styles> & ProviderContext & RouteComponentProps;
 
 interface IState {
   selectedTab: ERegistrationFormTab;
@@ -37,6 +38,8 @@ interface IState {
   isOpenSMSModal: boolean;
   validationErrors: string[];
   remainingSecondsForSMS: number;
+  isSendSMSRequestInProgress: boolean;
+  isOpenSuccessRegistrationModal: boolean;
 }
 
 class RegistrationForm extends React.Component<TProps, IState> {
@@ -46,13 +49,20 @@ class RegistrationForm extends React.Component<TProps, IState> {
       name: "",
       email: "",
       phone: "",
+      password: "",
     },
     isOpenSMSModal: false,
+    isOpenSuccessRegistrationModal: false,
     validationErrors: [],
     remainingSecondsForSMS: 0,
+    isSendSMSRequestInProgress: false,
   };
 
-  actions: IActions = new Actions(new Services(), this.props.enqueueSnackbar);
+  actions: IActions = new Actions(
+    new Services(),
+    this.props.enqueueSnackbar,
+    this.props.history
+  );
 
   isErrorVisible = (
     fieldName: keyof TRegistrationRequestRequiredFields
@@ -117,6 +127,7 @@ class RegistrationForm extends React.Component<TProps, IState> {
   };
 
   handleSendSMSCode = () => {
+    this.setState({ isSendSMSRequestInProgress: true });
     const phone = this.state.form.phone;
     const phoneForServer = getPhoneForServer(phone);
 
@@ -131,6 +142,9 @@ class RegistrationForm extends React.Component<TProps, IState> {
           },
           this.handleOpenSMSModal
         );
+      })
+      .finally(() => {
+        this.setState({ isSendSMSRequestInProgress: false });
       });
   };
 
@@ -150,10 +164,25 @@ class RegistrationForm extends React.Component<TProps, IState> {
         break;
       }
       case ERegistrationFormTab.CONTACTS: {
-        this.validateForm(["email", "phone"], this.handleSendSMSCode);
+        this.validateForm(
+          ["email", "phone", "password"],
+          this.handleSendSMSCode
+        );
         break;
       }
     }
+  };
+
+  handleOpenSuccessRegistrationModal = () => {
+    this.setState({ isOpenSuccessRegistrationModal: true });
+  };
+
+  handleCloseSuccessRegistrationModal = () => {
+    this.setState({ isOpenSuccessRegistrationModal: false }, () => {
+      this.props.history.push({
+        pathname: "/",
+      });
+    });
   };
 
   render() {
@@ -163,6 +192,8 @@ class RegistrationForm extends React.Component<TProps, IState> {
       form: { phone },
       isOpenSMSModal,
       remainingSecondsForSMS,
+      isSendSMSRequestInProgress,
+      isOpenSuccessRegistrationModal,
     } = this.state;
     const { classes } = this.props;
 
@@ -225,6 +256,7 @@ class RegistrationForm extends React.Component<TProps, IState> {
                 classes={classes}
                 form={form}
                 isErrorVisible={this.isErrorVisible}
+                isActionInProgress={isSendSMSRequestInProgress}
               />
             </TabPanel>
           </Paper>
@@ -237,6 +269,16 @@ class RegistrationForm extends React.Component<TProps, IState> {
             remainingSecondsForSMS={remainingSecondsForSMS}
             phone={phone}
             actions={this.actions}
+            onOpenSuccessRegistrationModal={
+              this.handleOpenSuccessRegistrationModal
+            }
+          />
+        )}
+        {isOpenSuccessRegistrationModal && (
+          <SuccessRegistrationModal
+            classes={classes}
+            isOpen={isOpenSuccessRegistrationModal}
+            onClose={this.handleCloseSuccessRegistrationModal}
           />
         )}
       </div>
@@ -244,7 +286,9 @@ class RegistrationForm extends React.Component<TProps, IState> {
   }
 }
 
-const RegistrationFormWithSnackbar = withSnackbar(RegistrationForm);
+const RegistrationFormWithRouter = withRouter(RegistrationForm);
+
+const RegistrationFormWithSnackbar = withSnackbar(RegistrationFormWithRouter);
 
 const RegistrationFormWithStyles = withStyles(styles, {
   withTheme: true,

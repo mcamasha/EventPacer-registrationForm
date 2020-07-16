@@ -2,53 +2,53 @@ import * as React from "react";
 import {
   withStyles,
   WithStyles,
-  Drawer,
-  ListItem,
-  List,
-  Divider,
-  ListItemIcon,
-  ListItemText,
+  Container,
+  Tabs,
+  Tab,
+  Paper,
 } from "@material-ui/core";
 import { styles } from "./HomeStyle";
-import { MENU_ITEMS_CONFIGS } from "./Consts";
+import { EHomeTab } from "./Enums";
 
 type TProps = WithStyles<typeof styles>;
 
-interface IState {}
+interface IState {
+  selectedTab: EHomeTab;
+}
 
 class Home extends React.Component<TProps, IState> {
-  renderDrawerBody() {
-    return (
-      <div>
-        <div className={this.props.classes.toolbar} />
-        <Divider />
-        <List>
-          {MENU_ITEMS_CONFIGS.map(({ label, icon }) => (
-            <ListItem button key={label}>
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText primary={label} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    );
-  }
+  state: IState = {
+    selectedTab: EHomeTab.LIST,
+  };
+
+  handleChangeSelectedTab = (selectedTab: EHomeTab) => (): void => {
+    this.setState({ selectedTab });
+  };
+
+  handleSelectTab = (_event: React.ChangeEvent<{}>, selectedTab: EHomeTab) => {
+    this.handleChangeSelectedTab(selectedTab)();
+  };
 
   render() {
+    const { selectedTab } = this.state;
     const { classes } = this.props;
 
     return (
-      <nav>
-        <Drawer
+      <Paper square>
+        <Tabs
+          value={selectedTab}
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={this.handleSelectTab}
           classes={{
-            paper: classes.drawerPaper,
+            flexContainer: classes.tabContainer,
           }}
-          variant="permanent"
-          open
         >
-          {this.renderDrawerBody()}
-        </Drawer>
-      </nav>
+          <Tab value={EHomeTab.LIST} label="Список" />
+          <Tab value={EHomeTab.ARCHIVE} label="Архив" />
+          <Tab value={EHomeTab.STATISTICS} label="Статистика" />
+        </Tabs>
+      </Paper>
     );
   }
 }

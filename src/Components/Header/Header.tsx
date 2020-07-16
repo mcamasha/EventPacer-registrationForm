@@ -3,42 +3,60 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
-  IconButton,
-  Box,
+  WithStyles,
+  withStyles,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import { getHeaderStyles } from "./HeaderStyle";
 import { HeaderButton } from "./HeaderButton";
-import { Link } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { hasUserAuth } from "../../Utils/AuthUtils";
+import { styles } from "./HeaderStyle";
+import { Actions, IActions } from "../../Actions/Actions";
+import { Services } from "../../Services/Services";
+import { noop } from "lodash";
 
-export function Header() {
-  const classes = getHeaderStyles();
+type TProps = WithStyles<typeof styles> & RouteComponentProps;
 
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-          hidden={!hasUserAuth()}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          Eventpacer
-        </Typography>
-        <Link
-          className={classes.linkItem}
-          to="/registration"
-          hidden={hasUserAuth()}
-        >
-          <HeaderButton>Регистрация</HeaderButton>
-        </Link>
-      </Toolbar>
-    </AppBar>
-  );
+class Header extends React.Component<TProps> {
+  actions: IActions = new Actions(new Services(), noop, this.props.history);
+
+  handleExitButtonClick = () => {
+    this.actions.exit();
+  };
+
+  handleRegistrationtButtonClick = () => {
+    this.props.history.push("/registration");
+  };
+
+  render() {
+    const { classes } = this.props;
+    const hasAuth: boolean = hasUserAuth();
+
+    return (
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            Eventpacer
+          </Typography>
+          {!hasAuth && (
+            <HeaderButton onClick={this.handleRegistrationtButtonClick}>
+              Регистрация
+            </HeaderButton>
+          )}
+          {hasAuth && (
+            <HeaderButton onClick={this.handleExitButtonClick}>
+              Выйти
+            </HeaderButton>
+          )}
+        </Toolbar>
+      </AppBar>
+    );
+  }
 }
+
+const HeaderWithRouter = withRouter(Header);
+
+const HeaderWithStyles = withStyles(styles, {
+  withTheme: true,
+})(HeaderWithRouter);
+
+export { HeaderWithStyles as Header };

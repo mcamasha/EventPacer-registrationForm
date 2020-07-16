@@ -3,7 +3,7 @@ import { IServices } from "../Services/Services";
 import { anchorOrigin } from "../Consts/NotificationConsts";
 import { OptionsObject, SnackbarMessage } from "notistack";
 import { ERequestToGetSMSCodeResult, ERegistrationUserResult } from "../Enums";
-import { history } from "../App";
+import { BrowserHistory } from "history";
 
 export interface IActions {
   sendRequestToGetSMSCode: (
@@ -14,15 +14,15 @@ export interface IActions {
     phone: string,
     code: string
   ) => Promise<IRegistrationResponse>;
+
+  exit: () => void;
 }
 
 export class Actions implements IActions {
   constructor(
     private service: IServices,
-    private enqueueSnackbar: (
-      message: SnackbarMessage,
-      options?: OptionsObject
-    ) => void
+    private enqueueSnackbar: Function,
+    private history: BrowserHistory
   ) {}
 
   async sendRequestToGetSMSCode(
@@ -42,7 +42,7 @@ export class Actions implements IActions {
           return Promise.resolve(data);
         }
         case ERequestToGetSMSCodeResult.INVALID_PHONE_NUMBER: {
-          this.enqueueSnackbar("Указан неверный формат номера телефона.", {
+          this.enqueueSnackbar("Указан неверный номер телефона.", {
             anchorOrigin,
             variant: "error",
           });
@@ -96,10 +96,6 @@ export class Actions implements IActions {
       localStorage.setItem("accessToken", response.data.tokens.accessToken);
       localStorage.setItem("refreshToken", response.data.tokens.refreshToken);
 
-      history.push({
-        pathname: "/",
-      });
-
       return Promise.resolve(response.data);
     } catch (error) {
       const data = error?.response?.data;
@@ -125,5 +121,12 @@ export class Actions implements IActions {
 
       return Promise.reject();
     }
+  }
+
+  exit() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    this.history.push("/");
   }
 }

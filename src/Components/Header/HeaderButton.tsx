@@ -3,12 +3,17 @@ import { Button } from "@material-ui/core";
 
 interface IProps {
   className?: string;
+  onClick?: () => void;
 }
 
-export const HeaderButton: React.SFC<IProps> = props => {
+export const HeaderButton: React.SFC<IProps> = ({
+  className,
+  children,
+  onClick,
+}) => {
   return (
-    <Button className={props.className} color="inherit">
-      {props.children}
+    <Button onClick={onClick} className={className} color="inherit">
+      {children}
     </Button>
   );
 };

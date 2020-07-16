@@ -4,15 +4,17 @@ import {
   WithStyles,
   Box,
   Button,
-  TextField
+  TextField,
+  CircularProgress,
 } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { styles } from "../RegistrationFormStyle";
 import {
   IRegistrationRequest,
-  TRegistrationRequestRequiredFields
+  TRegistrationRequestRequiredFields,
 } from "../../../Models";
 import { PhoneInput } from "./PhoneInput";
+import { validateEmail } from "../Utils/Utils";
 
 interface IProps {
   onNextButtonClick: () => void;
@@ -21,11 +23,20 @@ interface IProps {
   isErrorVisible: (
     fieldName: keyof TRegistrationRequestRequiredFields
   ) => boolean;
+  isActionInProgress?: boolean;
 }
 
 type TProps = IProps & WithStyles<typeof styles>;
 
-export class ContactsSection extends React.Component<TProps> {
+interface IState {
+  passwordConfirmation: string;
+}
+
+export class ContactsSection extends React.Component<TProps, IState> {
+  state: IState = {
+    passwordConfirmation: "",
+  };
+
   handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange({ email: e.target.value });
   };
@@ -34,14 +45,31 @@ export class ContactsSection extends React.Component<TProps> {
     this.props.onChange({ phone });
   };
 
+  handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.onChange({ password: e.target.value });
+  };
+
+  handleChangePasswordConfirmation = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    this.setState({ passwordConfirmation: e.target.value });
+  };
+
   render() {
     const {
       classes,
       onNextButtonClick,
-      form: { email, phone, facebook, telegram },
-      isErrorVisible
+      form: { email, facebook, telegram, password },
+      isErrorVisible,
+      isActionInProgress,
     } = this.props;
-    const isEmailErrorVisible = isErrorVisible("email") && !email;
+    const { passwordConfirmation } = this.state;
+
+    const isEmptyEmailErrorVisible = isErrorVisible("email") && !email;
+    const isPasswordConfirmationErrorVisible =
+      !!passwordConfirmation && !!password && password !== passwordConfirmation;
+    const isPasswordErrorVisible = isErrorVisible("password") && !password;
+    const isEmailFormatErrorVisible = !!email && !validateEmail(email);
 
     return (
       <Container maxWidth="md" className={classes.container}>
@@ -52,9 +80,13 @@ export class ContactsSection extends React.Component<TProps> {
                 label="Электронная почта"
                 value={email}
                 fullWidth
-                error={isEmailErrorVisible}
+                error={isEmptyEmailErrorVisible || isEmailFormatErrorVisible}
                 helperText={
-                  isEmailErrorVisible && "Не указана электронная почта."
+                  isEmptyEmailErrorVisible
+                    ? "Не указана электронная почта"
+                    : isEmailFormatErrorVisible
+                    ? "Неверный формат электронной почты"
+                    : null
                 }
                 onChange={this.handleChangeEmail}
               />
@@ -63,16 +95,30 @@ export class ContactsSection extends React.Component<TProps> {
               <TextField
                 type="password"
                 label="Пароль"
-                value={null}
+                value={password}
                 fullWidth
+                onChange={this.handleChangePassword}
+                error={isPasswordErrorVisible}
+                helperText={isPasswordErrorVisible && "Не указан пароль"}
               />
             </Box>
             <Box className={classes.formRow}>
               <TextField
                 type="password"
                 label="Подтвердите пароль"
-                value={null}
+                value={passwordConfirmation}
                 fullWidth
+                error={
+                  isPasswordErrorVisible || isPasswordConfirmationErrorVisible
+                }
+                onChange={this.handleChangePasswordConfirmation}
+                helperText={
+                  isPasswordErrorVisible
+                    ? "Не указан пароль"
+                    : isPasswordConfirmationErrorVisible
+                    ? "Не совпадают пароли"
+                    : ""
+                }
               />
             </Box>
             <Box className={classes.formRow}>
@@ -95,9 +141,15 @@ export class ContactsSection extends React.Component<TProps> {
             onClick={onNextButtonClick}
             variant="contained"
             color="secondary"
-            endIcon={<ArrowForwardIosIcon />}
+            endIcon={!isActionInProgress && <ArrowForwardIosIcon />}
+            disabled={isActionInProgress}
+            className={classes.generalInfoNextButton}
           >
-            Далее
+            {isActionInProgress ? (
+              <CircularProgress size="1rem" />
+            ) : (
+              "Выслать SMS-код"
+            )}
           </Button>
         </Box>
       </Container>

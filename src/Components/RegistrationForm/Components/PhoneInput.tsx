@@ -82,6 +82,7 @@ export class PhoneInput extends React.Component<TProps, IState> {
             fullWidth
             onChange={this.handleChangePhone}
             error={isPhoneErrorVisible}
+            type="number"
           />
         </Box>
         {isPhoneErrorVisible && (

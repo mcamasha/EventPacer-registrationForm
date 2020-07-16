@@ -13,7 +13,7 @@ import {
   IRegistrationRequest,
   TRegistrationRequestRequiredFields,
 } from "../../../Models";
-import { DropzoneArea } from "material-ui-dropzone";
+import { DropzoneArea, DropzoneAreaBase } from "material-ui-dropzone";
 
 interface IProps {
   // пропсы вынести в общие
@@ -52,7 +52,7 @@ export class GeneralInformationSection extends React.Component<TProps> {
     const {
       classes,
       onNextButtonClick,
-      form: { name, description, site },
+      form: { name, description, site, logo },
       isErrorVisible,
     } = this.props;
     const isNameErrorVisible = isErrorVisible("name") && !name;
@@ -69,21 +69,19 @@ export class GeneralInformationSection extends React.Component<TProps> {
                 acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
                 onChange={this.handleChangeFile}
                 getFileAddedMessage={this.getLogoAddedMessage}
+                showPreviews
+                showPreviewsInDropzone={false}
+                previewGridClasses={{
+                  container: classes.generalInfoPreviewLogoContainer,
+                  item: classes.generalInfoPreviewItemContainer,
+                }}
+                previewText=""
+                dropzoneParagraphClass={classes.generalInfoDropzoneText}
+                classes={{
+                  root: classes.generalInfoDropZoneLogo,
+                  icon: classes.generalInfoDropZoneLogoIcon,
+                }}
               />
-            </Box>
-            <Box className={classes.generalInfoLogoInputContainer}>
-              <input
-                accept="image/*"
-                className={classes.generalInfoLogoInput}
-                id="contained-button-file"
-                multiple
-                type="file"
-              />
-              <label htmlFor="contained-button-file">
-                <Button variant="contained" color="primary" component="span">
-                  Выбрать файл
-                </Button>
-              </label>
             </Box>
           </Box>
           <Box className={classes.formColomn}>

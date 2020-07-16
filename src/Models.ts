@@ -7,11 +7,12 @@ export interface IRegistrationRequest {
   name: string;
   logo?: File;
   description?: string;
+  password: string;
 }
 
 export type TRegistrationRequestRequiredFields = Pick<
   IRegistrationRequest,
-  "email" | "phone" | "name"
+  "email" | "phone" | "name" | "password"
 >;
 
 export interface IRequestSendSMSCodeResponse {
