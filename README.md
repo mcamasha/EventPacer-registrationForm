@@ -3,3 +3,6 @@
  - React
  - Material UI
  - С типизацией TypeScript
+
+
+Демонстрация: https://mcamasha.github.io/EventPacer-registrationForm/
