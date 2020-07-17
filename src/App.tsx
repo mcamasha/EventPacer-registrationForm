@@ -1,33 +1,26 @@
 import * as React from "react";
-import { SnackbarProvider } from "notistack";
-import { Header } from "./Components/Header/Header";
+import Header from "./Components/Header/Header";
 import { PageContent } from "./Components/PageContent/PageContent";
 import { Menu } from "./Components/Menu/Menu";
-import { ThemeProvider, CssBaseline } from "@material-ui/core";
-import { theme } from "./Consts/Theme";
-import { getAppStyles } from "./Styles/Styles";
-import { Router } from "react-router";
-import { createBrowserHistory } from "history";
-
+import { withStyles, WithStyles } from "@material-ui/core";
+import { appStyles } from "./Styles/Styles";
+import { withRouter, RouteComponentProps } from "react-router";
 import "./styles.css";
 
-const history = createBrowserHistory();
+type TProps = WithStyles<typeof appStyles> & RouteComponentProps;
 
-export default function App() {
-  const classes = getAppStyles();
-
-  return (
-    <div className={`App ${classes.root}`}>
-      <SnackbarProvider>
-        <Router history={history}>
-          <CssBaseline />
-          <ThemeProvider theme={theme}>
-            <Header />
-            <Menu />
-            <PageContent />
-          </ThemeProvider>
-        </Router>
-      </SnackbarProvider>
-    </div>
-  );
+class App extends React.Component<TProps> {
+  render() {
+    return (
+      <div className={`App ${this.props.classes.root}`}>
+        <Header />
+        <Menu />
+        <PageContent />
+      </div>
+    );
+  }
 }
+
+const AppWithStyles = withStyles(appStyles, { withTheme: true })(App);
+
+export default withRouter(AppWithStyles);

@@ -5,13 +5,11 @@ import {
   WithStyles,
   Box,
   Button,
-  InputAdornment,
   Grid,
   Link,
   CircularProgress,
 } from "@material-ui/core";
 import { styles } from "../RegistrationFormStyle";
-import CloseIcon from "@material-ui/icons/Close";
 import { IActions } from "../../../Actions/Actions";
 import { IRequestSendSMSCodeResponse } from "../../../Models";
 import { getPhoneForServer } from "../Utils/Utils";
@@ -49,11 +47,12 @@ export class SMSModal extends React.Component<TProps, IState> {
     );
   }
 
-  handleRequestNewSMSCode = (event: React.SyntheticEvent) => {
+  handleRequestNewSMSCode = () => {
     const { actions, phone } = this.props;
+    const phoneForServer = getPhoneForServer(phone);
 
     actions
-      .sendRequestToGetSMSCode(phone)
+      .sendRequestToGetSMSCode(phoneForServer)
       .then((data: IRequestSendSMSCodeResponse | undefined) => {
         const remainingSeconds = data?.smsSessionParameters.nextSendAfterSec;
 
@@ -83,6 +82,7 @@ export class SMSModal extends React.Component<TProps, IState> {
 
       if (!remainingSeconds) {
         clearInterval(this.smsCodeTimerId);
+        return;
       }
 
       this.setState({ remainingSeconds: --remainingSeconds });
@@ -97,7 +97,7 @@ export class SMSModal extends React.Component<TProps, IState> {
       onClose,
     } = this.props;
     const { smsCode } = this.state;
-    const phoneForServer = getPhoneForServer(phone);
+    const phoneForServer: string = getPhoneForServer(phone);
 
     this.setState({ isLoaderSendCodeButtonVisible: true });
     actions
@@ -112,7 +112,7 @@ export class SMSModal extends React.Component<TProps, IState> {
   };
 
   renderModalBody() {
-    const { classes, onClose } = this.props;
+    const { classes } = this.props;
     const {
       smsCode,
       remainingSeconds,
@@ -122,7 +122,6 @@ export class SMSModal extends React.Component<TProps, IState> {
     return (
       <div className={classes.SMSModal}>
         <Box className={classes.SMSModalBody}>
-          <CloseIcon className={classes.SMSModalCloseIcon} onClick={onClose} />
           <h2>Введите SMS-код для окончания регистрации</h2>
           <p>
             Повторно&nbsp;

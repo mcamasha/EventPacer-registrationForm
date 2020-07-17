@@ -29,6 +29,8 @@ import { Services } from "../../Services/Services";
 import { withSnackbar, ProviderContext } from "notistack";
 import { getPhoneForServer } from "./Utils/Utils";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import { anchorOrigin } from "../../Consts/NotificationConsts";
+import { REGISTRATION_FORM_VALIDATION_ERRORS } from "./Consts";
 
 type TProps = WithStyles<typeof styles> & ProviderContext & RouteComponentProps;
 
@@ -79,6 +81,7 @@ class RegistrationForm extends React.Component<TProps, IState> {
     callback: () => void
   ) {
     const { form, validationErrors } = this.state;
+    const { enqueueSnackbar } = this.props;
     let newValidationErrors = [...validationErrors];
 
     fieldNames.forEach((key: keyof TRegistrationRequestRequiredFields) => {
@@ -95,9 +98,22 @@ class RegistrationForm extends React.Component<TProps, IState> {
       }
     });
 
+    const sectionErrors = newValidationErrors.filter((key: string) =>
+      fieldNames.includes(key as keyof TRegistrationRequestRequiredFields)
+    );
+
+    if (!isEmpty(newValidationErrors)) {
+      sectionErrors.forEach((keyError) => {
+        enqueueSnackbar(REGISTRATION_FORM_VALIDATION_ERRORS[keyError], {
+          anchorOrigin,
+          variant: "error",
+        });
+      });
+    }
+
     this.setState(
       { validationErrors: newValidationErrors },
-      !isEmpty(newValidationErrors) ? undefined : callback
+      !isEmpty(sectionErrors) ? undefined : callback
     );
   }
 
@@ -165,7 +181,7 @@ class RegistrationForm extends React.Component<TProps, IState> {
       }
       case ERegistrationFormTab.CONTACTS: {
         this.validateForm(
-          ["email", "phone", "password"],
+          ["email", "phone", "password", "name"],
           this.handleSendSMSCode
         );
         break;
@@ -294,4 +310,4 @@ const RegistrationFormWithStyles = withStyles(styles, {
   withTheme: true,
 })(RegistrationFormWithSnackbar);
 
-export { RegistrationFormWithStyles as RegistrationForm };
+export default RegistrationFormWithStyles;

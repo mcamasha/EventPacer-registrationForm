@@ -1,7 +1,9 @@
-import { makeStyles } from "@material-ui/core";
+import { createStyles, Theme } from "@material-ui/core";
 
-export const getAppStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  }
-}));
+export const appStyles = (theme: Theme) => {
+  return createStyles({
+    root: {
+      flexGrow: 1,
+    },
+  });
+};

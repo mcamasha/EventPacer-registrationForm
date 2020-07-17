@@ -57,4 +57,4 @@ const HomeWithStyles = withStyles(styles, {
   withTheme: true,
 })(Home);
 
-export { HomeWithStyles as Home };
+export default HomeWithStyles;

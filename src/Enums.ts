@@ -6,4 +6,5 @@ export enum ERequestToGetSMSCodeResult {
 
 export enum ERegistrationUserResult {
   NEW_CODE_REQUIRED = "NewCodeRequired",
+  INVALID_CODE = "InvalidCode",
 }

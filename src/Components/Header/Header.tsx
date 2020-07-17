@@ -59,4 +59,4 @@ const HeaderWithStyles = withStyles(styles, {
   withTheme: true,
 })(HeaderWithRouter);
 
-export { HeaderWithStyles as Header };
+export default HeaderWithStyles;

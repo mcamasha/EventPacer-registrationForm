@@ -111,6 +111,13 @@ export class Actions implements IActions {
           );
           break;
         }
+        case ERegistrationUserResult.INVALID_CODE: {
+          this.enqueueSnackbar("Введённый SMS-код неверен.", {
+            anchorOrigin,
+            variant: "error",
+          });
+          break;
+        }
         default: {
           this.enqueueSnackbar("Произошла неизвестная ошибка", {
             anchorOrigin,
