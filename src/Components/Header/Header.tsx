@@ -16,13 +16,22 @@ import { noop } from "lodash";
 
 type TProps = WithStyles<typeof styles> & RouteComponentProps;
 
+/**
+ * Хедер приложения.
+ */
 class Header extends React.Component<TProps> {
   actions: IActions = new Actions(new Services(), noop, this.props.history);
 
+  /**
+   * Обрабочик нажатия на кнопку "Выйти".
+   */
   handleExitButtonClick = () => {
     this.actions.exit();
   };
 
+  /**
+   * Обрабочик нажатия на кнопку "Регистрация".
+   */
   handleRegistrationtButtonClick = () => {
     this.props.history.push("/registration");
   };

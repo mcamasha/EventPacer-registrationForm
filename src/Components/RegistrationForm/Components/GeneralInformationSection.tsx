@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Typography,
   Container,
   WithStyles,
   Box,
@@ -9,41 +8,56 @@ import {
 } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { styles } from "../RegistrationFormStyle";
-import {
-  IRegistrationRequest,
-  TRegistrationRequestRequiredFields,
-} from "../../../Models";
-import { DropzoneArea, DropzoneAreaBase } from "material-ui-dropzone";
+import { DropzoneArea } from "material-ui-dropzone";
+import { ISectionProps } from "../Models";
 
-interface IProps {
-  // пропсы вынести в общие
-  onNextButtonClick: () => void;
-  onChange: (partial: Partial<IRegistrationRequest>) => void;
-  form: IRegistrationRequest;
-  isErrorVisible: (
-    fieldName: keyof TRegistrationRequestRequiredFields
-  ) => boolean;
-}
+type TProps = ISectionProps & WithStyles<typeof styles>;
 
-type TProps = IProps & WithStyles<typeof styles>;
-
+/**
+ * Секция "Общая информация".
+ */
 export class GeneralInformationSection extends React.Component<TProps> {
+  /**
+   * Метод возвращающий кастомную текстовку нотификации успешного добавления логотипа.
+   *
+   * @param {string} fileName Наименование добавляемого поля.
+   */
   getLogoAddedMessage = (fileName: string) => {
     return `Файл ${fileName} был успешно добавлен.`;
   };
 
+  /**
+   * Метод возвращающий кастомную текстовку нотификации успешного добавления логотипа.
+   *
+   * @param {string} fileName Наименование добавляемого поля.
+   */
   handleChangeFile = (newLogo: any) => {
     this.props.onChange({ logo: newLogo });
   };
 
+  /**
+   * Обработчик изменения значения поля "Наименование".
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event Событие изменения значения.
+   */
   handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange({ name: event.target.value });
   };
 
+  /**
+   * Обработчик изменения значения поля "Описание".
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event Событие изменения значения.
+   */
   handleChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange({ description: event.target.value });
   };
 
+  /**
+   * Обработчик изменения значения поля "Web-сайт".
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event Событие изменения значения.
+   */
   handleChangeSite = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange({ site: event.target.value });
   };
@@ -52,7 +66,7 @@ export class GeneralInformationSection extends React.Component<TProps> {
     const {
       classes,
       onNextButtonClick,
-      form: { name, description, site, logo },
+      form: { name, description, site },
       isErrorVisible,
     } = this.props;
     const isNameErrorVisible = isErrorVisible("name") && !name;

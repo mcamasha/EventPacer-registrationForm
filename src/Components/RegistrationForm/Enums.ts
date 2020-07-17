@@ -1,9 +1,19 @@
+/**
+ * Вкладки формы регистрации.
+ *
+ * WELCOME - Приветствие.
+ * GENERAL_INFORMATION - Общая информация.
+ * CONTACTS - Контакты.
+ */
 export enum ERegistrationFormTab {
   WELCOME = "WELCOME",
   GENERAL_INFORMATION = "GENERAL_INFORMATION",
   CONTACTS = "CONTACTS",
 }
 
+/**
+ * Префиксы номеров телефонов.
+ */
 export enum EPhonePrefix {
   "+0" = "+0",
   "+7" = "+7",

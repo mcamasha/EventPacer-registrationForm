@@ -9,46 +9,61 @@ import {
 } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { styles } from "../RegistrationFormStyle";
-import {
-  IRegistrationRequest,
-  TRegistrationRequestRequiredFields,
-} from "../../../Models";
 import { PhoneInput } from "./PhoneInput";
 import { validateEmail } from "../Utils/Utils";
+import { ISectionProps } from "../Models";
 
-interface IProps {
-  onNextButtonClick: () => void;
-  onChange: (partial: Partial<IRegistrationRequest>) => void;
-  form: IRegistrationRequest;
-  isErrorVisible: (
-    fieldName: keyof TRegistrationRequestRequiredFields
-  ) => boolean;
-  isActionInProgress?: boolean;
-}
+type TProps = ISectionProps & WithStyles<typeof styles>;
 
-type TProps = IProps & WithStyles<typeof styles>;
-
+/**
+ * Состояние компонента.
+ *
+ * @prop {string} passwordConfirmation Подтверждение пароля.
+ */
 interface IState {
   passwordConfirmation: string;
 }
 
+/**
+ * Секция "Контакты".
+ */
 export class ContactsSection extends React.Component<TProps, IState> {
   state: IState = {
     passwordConfirmation: "",
   };
 
+  /**
+   * Обработчик изменения поля "электронная почта".
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e
+   */
   handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange({ email: e.target.value });
   };
 
+  /**
+   * Обработчик изменения поля "телефон".
+   *
+   * @param {string} phone Телефон.
+   */
   handleChangePhone = (phone: string) => {
     this.props.onChange({ phone });
   };
 
+  /**
+   * Обработчик изменения поля "Пароль".
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e
+   */
   handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange({ password: e.target.value });
   };
 
+  /**
+   * Обработчик изменения поля "Пароль для подтверждения".
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e
+   */
   handleChangePasswordConfirmation = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {

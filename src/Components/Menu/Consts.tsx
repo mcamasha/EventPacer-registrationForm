@@ -4,6 +4,9 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import StarIcon from "@material-ui/icons/Star";
 import { IMenuItemConfig } from "./Models";
 
+/**
+ * Конфигурация пунктов меню.
+ */
 export const MENU_ITEMS_CONFIGS: IMenuItemConfig[] = [
   {
     label: "Мероприятия",

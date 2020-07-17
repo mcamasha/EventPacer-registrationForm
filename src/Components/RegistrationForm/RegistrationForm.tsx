@@ -34,6 +34,17 @@ import { REGISTRATION_FORM_VALIDATION_ERRORS } from "./Consts";
 
 type TProps = WithStyles<typeof styles> & ProviderContext & RouteComponentProps;
 
+/**
+ * Состояние компонента.
+ *
+ * @prop {ERegistrationFormTab} selectedTab Выбранная вкладка.
+ * @prop {IRegistrationRequest} form Форма.
+ * @prop {boolean} isOpenSMSModal Флаг открыта ли модалка для ввода SMS-кода.
+ * @prop {string[]} validationErrors Ошибки валидации.
+ * @prop {number} remainingSecondsForSMS remainingSecondsForSMS Общее количество секунд, которые нужно подождать для повторного вызова сервиса получения SMS-кода.
+ * @prop {boolean} isSendSMSRequestInProgress Флаг нахождения запроса на получение SMS-кода в состоянии прогресса.
+ * @prop {boolean} isOpenSuccessRegistrationModal Флаг отображения модального окна успешной регистрации.
+ */
 interface IState {
   selectedTab: ERegistrationFormTab;
   form: IRegistrationRequest;
@@ -44,6 +55,9 @@ interface IState {
   isOpenSuccessRegistrationModal: boolean;
 }
 
+/**
+ * Форма регистрации.
+ */
 class RegistrationForm extends React.Component<TProps, IState> {
   state: IState = {
     selectedTab: ERegistrationFormTab.WELCOME,
@@ -66,6 +80,11 @@ class RegistrationForm extends React.Component<TProps, IState> {
     this.props.history
   );
 
+  /**
+   * Проверка необходимо ли показывать UI валидацию для данного поля.
+   *
+   * @param {keyof TRegistrationRequestRequiredFields} fieldName Наименование поля.
+   */
   isErrorVisible = (
     fieldName: keyof TRegistrationRequestRequiredFields
   ): boolean => {
@@ -73,8 +92,10 @@ class RegistrationForm extends React.Component<TProps, IState> {
   };
 
   /**
+   * Функция валидации формы.
    *
    * @param {(keyof TRegistrationRequestRequiredFields)[]} fieldNames Массив наименовани полей, которые необходимо провалидировать.
+   * @param {Function} callback Коллбек, вызываемый после валидации, в случае успеха.
    */
   validateForm(
     fieldNames: (keyof TRegistrationRequestRequiredFields)[],
@@ -117,10 +138,21 @@ class RegistrationForm extends React.Component<TProps, IState> {
     );
   }
 
+  /**
+   * Обработчик выбора вкладки.
+   *
+   * @param {ERegistrationFormTab} selectedTab Выбранная вкладка.
+   */
   handleChangeSelectedTab = (selectedTab: ERegistrationFormTab) => (): void => {
     this.setState({ selectedTab });
   };
 
+  /**
+   * Обработчик выбора вкладки.
+   *
+   * @param {React.ChangeEvent<{}>} _event Событие.
+   * @param {ERegistrationFormTab} selectedTab Выбранная вкладка.
+   */
   handleSelectTab = (
     _event: React.ChangeEvent<{}>,
     selectedTab: ERegistrationFormTab
@@ -128,20 +160,35 @@ class RegistrationForm extends React.Component<TProps, IState> {
     this.handleChangeSelectedTab(selectedTab)();
   };
 
+  /**
+   * Обработчик изменения формы.
+   *
+   * @param {Partial<IRegistrationRequest>} partial Набор полей из формы, которые необходимо обновить.
+   */
   handleChangeForm = (partial: Partial<IRegistrationRequest>) => {
     this.setState((prevState) => ({
       form: { ...prevState.form, ...partial },
     }));
   };
 
+  /**
+   * Обработчик закрытия модалки с SMS-кодом.
+   *
+   */
   handleCloseSMSModal = () => {
     this.setState({ isOpenSMSModal: false });
   };
 
+  /**
+   * Обработчик открытия модалки с SMS-кодом.
+   */
   handleOpenSMSModal = () => {
     this.setState({ isOpenSMSModal: true });
   };
 
+  /**
+   * Обработчик отправки запроса на получение SMS-кода.
+   */
   handleSendSMSCode = () => {
     this.setState({ isSendSMSRequestInProgress: true });
     const phone = this.state.form.phone;
@@ -164,6 +211,11 @@ class RegistrationForm extends React.Component<TProps, IState> {
       });
   };
 
+  /**
+   * Обработчик нажатия на кнопку перехода к следующему действию.
+   *
+   * @prop {ERegistrationFormTab} section Секция
+   */
   handleNextButtonClick = (section: ERegistrationFormTab) => () => {
     switch (section) {
       case ERegistrationFormTab.WELCOME: {
@@ -189,10 +241,18 @@ class RegistrationForm extends React.Component<TProps, IState> {
     }
   };
 
+  /**
+   * Обработчик открытия модалки об успешном завершении регистрации.
+   *
+   */
   handleOpenSuccessRegistrationModal = () => {
     this.setState({ isOpenSuccessRegistrationModal: true });
   };
 
+  /**
+   * Обработчик закрытия модалки об успешном завершении регистрации.
+   *
+   */
   handleCloseSuccessRegistrationModal = () => {
     this.setState({ isOpenSuccessRegistrationModal: false }, () => {
       this.props.history.push({

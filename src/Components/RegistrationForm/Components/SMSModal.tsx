@@ -14,6 +14,14 @@ import { IActions } from "../../../Actions/Actions";
 import { IRequestSendSMSCodeResponse } from "../../../Models";
 import { getPhoneForServer } from "../Utils/Utils";
 
+/**
+ * @prop {boolean} isOpen Флаг отображения модального окна.
+ * @prop {Function} onClose Обработчик закрытия модального окна.
+ * @prop {Function} onOpenSuccessRegistrationModal Обработчик открытия модального окна успешной регистрации.
+ * @prop {number} remainingSecondsForSMS Общее количество секунд, которые нужно подождать для повторного вызова сервиса получения SMS-кода.
+ * @prop {IActions} actions Действия.
+ * @prop {string} phone Телефон.
+ */
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
@@ -23,6 +31,13 @@ interface IProps {
   phone: string;
 }
 
+/**
+ * Состояние компонента.
+ *
+ * @prop {string} smsCode SMS-код, введеный пользователем.
+ * @prop {number} remainingSeconds Количество секунд, которые осталось подождать до вызова для повторного вызова сервиса получения SMS-кода.
+ * @prop {boolean} isLoaderSendCodeButtonVisible Флаг отображения спиннера для кнопки отправить SMS-код.
+ */
 interface IState {
   smsCode: string;
   remainingSeconds: number;
@@ -31,6 +46,9 @@ interface IState {
 
 type TProps = IProps & WithStyles<typeof styles>;
 
+/**
+ * Модальное окно для верификации SMS-кода.
+ */
 export class SMSModal extends React.Component<TProps, IState> {
   state: IState = {
     smsCode: "",
@@ -47,6 +65,10 @@ export class SMSModal extends React.Component<TProps, IState> {
     );
   }
 
+  /**
+   * Обработчик запроса нового SMS-кода.
+   *
+   */
   handleRequestNewSMSCode = () => {
     const { actions, phone } = this.props;
     const phoneForServer = getPhoneForServer(phone);
@@ -72,10 +94,18 @@ export class SMSModal extends React.Component<TProps, IState> {
     clearInterval(this.smsCodeTimerId);
   }
 
+  /**
+   * Обработчик изменения SMS-кода.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e Событие ввода смс-кода.
+   */
   handleChangeSMSCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ smsCode: e.target.value });
   };
 
+  /**
+   * Задать интервал для уменьшения отсавшегося количества секунд на 1.
+   */
   setSendCodeInterval = () => {
     this.smsCodeTimerId = setInterval(() => {
       let remainingSeconds = this.state.remainingSeconds;
@@ -89,6 +119,9 @@ export class SMSModal extends React.Component<TProps, IState> {
     }, 1000);
   };
 
+  /**
+   * Обработчик отправки SMS-кода для верификации.
+   */
   handleSendSMSCode = (): void => {
     const {
       actions,
@@ -111,6 +144,9 @@ export class SMSModal extends React.Component<TProps, IState> {
       });
   };
 
+  /**
+   * Рендер тела модального окна.
+   */
   renderModalBody() {
     const { classes } = this.props;
     const {

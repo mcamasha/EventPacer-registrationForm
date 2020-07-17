@@ -1,13 +1,14 @@
 {
-  "name": "react-typescript",
+  "name": "event-pacer-registration-form",
   "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
+  "description": "Регистрационная форма для EventPacer",
   "keywords": [
     "typescript",
     "react",
     "starter"
   ],
   "main": "src/index.tsx",
+  "author": "mcaMasha - Сафарова Мария",
   "dependencies": {
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",

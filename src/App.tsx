@@ -9,6 +9,9 @@ import "./styles.css";
 
 type TProps = WithStyles<typeof appStyles> & RouteComponentProps;
 
+/**
+ * Компонент приложения.
+ */
 class App extends React.Component<TProps> {
   render() {
     return (

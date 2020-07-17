@@ -1,9 +1,13 @@
 import * as React from "react";
-import { Route, Switch, RouteProps, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import RegistrationForm from "../RegistrationForm/RegistrationForm";
+import { PrivateRoute } from "../PrivateRouter/PrivateRouter";
 import Home from "../Home/Home";
 import { hasUserAuth } from "../../Utils/AuthUtils";
 
+/**
+ * Контент страницы.
+ */
 export function PageContent() {
   return (
     <Switch>
@@ -15,12 +19,4 @@ export function PageContent() {
       </PrivateRoute>
     </Switch>
   );
-}
-
-interface IProps extends RouteProps {
-  enabled: boolean;
-}
-
-function PrivateRoute({ children, enabled, ...rest }: IProps) {
-  return <Route {...rest} render={() => (enabled ? children : null)} />;
 }

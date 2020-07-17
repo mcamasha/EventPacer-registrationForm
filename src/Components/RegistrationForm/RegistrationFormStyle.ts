@@ -1,5 +1,10 @@
 import { createStyles, Theme } from "@material-ui/core";
 
+/**
+ * Стили для формы регистрации.
+ *
+ * @param {Theme} theme Тема приложения.
+ */
 export const styles = (theme: Theme) =>
   createStyles({
     header: {

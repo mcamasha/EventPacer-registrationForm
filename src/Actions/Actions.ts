@@ -1,20 +1,36 @@
 import { IRequestSendSMSCodeResponse, IRegistrationResponse } from "../Models";
 import { IServices } from "../Services/Services";
 import { anchorOrigin } from "../Consts/NotificationConsts";
-import { OptionsObject, SnackbarMessage } from "notistack";
 import { ERequestToGetSMSCodeResult, ERegistrationUserResult } from "../Enums";
 import { BrowserHistory } from "history";
 
+/**
+ * Интерфейс для экшенов.
+ */
 export interface IActions {
+  /**
+   * Отправить запрос на получение SMS-кода на мобильный телефон.
+   *
+   * @param {string} phone Телефон.
+   */
   sendRequestToGetSMSCode: (
     phone: string
   ) => Promise<IRequestSendSMSCodeResponse | undefined>;
 
+  /**
+   * Регистрация пользователя.
+   *
+   * @param {string} phone Телефон.
+   * @param {string} code SMS-код введёный юзером.
+   */
   registrationUser: (
     phone: string,
     code: string
   ) => Promise<IRegistrationResponse>;
 
+  /**
+   * Выйти из приложения.
+   */
   exit: () => void;
 }
 
@@ -25,6 +41,9 @@ export class Actions implements IActions {
     private history: BrowserHistory
   ) {}
 
+  /**
+   * @inheritdoc
+   */
   async sendRequestToGetSMSCode(
     phone: string
   ): Promise<IRequestSendSMSCodeResponse | undefined> {
@@ -86,6 +105,9 @@ export class Actions implements IActions {
     }
   }
 
+  /**
+   * @inheritdoc
+   */
   async registrationUser(
     phone: string,
     code: string
@@ -130,6 +152,9 @@ export class Actions implements IActions {
     }
   }
 
+  /**
+   * @inheritdoc
+   */
   exit() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");

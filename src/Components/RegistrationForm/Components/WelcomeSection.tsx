@@ -4,20 +4,26 @@ import {
   Container,
   WithStyles,
   Box,
-  Button
+  Button,
 } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { styles } from "../RegistrationFormStyle";
 
+/**
+ * @prop {Function} onNextButtonClick Обработчик нажатия на кнопку "Далее".
+ */
 interface IProps {
   onNextButtonClick: () => void;
 }
 
 type TProps = IProps & WithStyles<typeof styles>;
 
+/**
+ * Секция "Приветствие".
+ */
 export const WelcomeSection: React.SFC<TProps> = ({
   classes,
-  onNextButtonClick
+  onNextButtonClick,
 }) => {
   return (
     <Container maxWidth="md" className={classes.container}>

@@ -3,6 +3,10 @@ import { Modal, WithStyles, Box, Button, Grid } from "@material-ui/core";
 import { styles } from "../RegistrationFormStyle";
 import CloseIcon from "@material-ui/icons/Close";
 
+/**
+ * @prop {Function} onClose Обработчик закрытия модального окна.
+ * @prop {boolean} isOpen Флаг отображения модального окна.
+ */
 interface IProps {
   onClose: () => void;
   isOpen: boolean;
@@ -10,7 +14,13 @@ interface IProps {
 
 type TProps = IProps & WithStyles<typeof styles>;
 
+/**
+ * Модальное окно при успешном окончании регистрации.
+ */
 export class SuccessRegistrationModal extends React.Component<TProps> {
+  /**
+   * Рендер тела модального окна.
+   */
   renderModalBody() {
     const { classes, onClose } = this.props;
 

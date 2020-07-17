@@ -15,7 +15,13 @@ import { hasUserAuth } from "../../Utils/AuthUtils";
 
 type TProps = WithStyles<typeof styles>;
 
+/**
+ * Компонент меню.
+ */
 class Menu extends React.Component<TProps> {
+  /**
+   * Рендер меню.
+   */
   renderDrawerBody() {
     return (
       <div>
