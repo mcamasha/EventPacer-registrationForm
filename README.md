@@ -1,2 +1,5 @@
-# EventPacer-registrationForm
-Created with CodeSandbox
+# Форма регистрации для Event Parcer
+Написано на:
+ - React
+ - Material UI
+ - С типизацией TypeScript
